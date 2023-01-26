@@ -6,11 +6,9 @@ import androidx.room.PrimaryKey
 
 @Entity("items")
 data class Item(
+    @PrimaryKey
     @ColumnInfo(name = "nom")
     var nom : String,
     @ColumnInfo(name = "preu")
     var preu : Int,
-) {
-    @PrimaryKey(autoGenerate = true)
-    var id: Int? = null
-}
+)

@@ -4,17 +4,16 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.finga.exempleclase.model.Coche
-import com.finga.exempleclase.model.Tractor
+import com.example.examenitems.models.Item
 
 @Database(
-    entities = [Coche::class, Tractor::class],
+    entities = [Item::class],
     version = 1,
-    exportSchema = true,
+    exportSchema = true
+)
 
-    )
 abstract class ItemDatabase: RoomDatabase(){
-    abstract fun itemDao(): MotorDAO
+    abstract fun itemDao(): ItemDAO
 
     companion object {
 
@@ -39,7 +38,7 @@ abstract class ItemDatabase: RoomDatabase(){
                 context.applicationContext,
                 ItemDatabase::class.java,
                 "item_database"
-            )
+            ).createFromAsset("database/examen_items.db")
                 .build()
         }
     }
