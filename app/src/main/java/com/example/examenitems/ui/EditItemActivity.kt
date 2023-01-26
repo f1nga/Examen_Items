@@ -21,17 +21,19 @@ import androidx.vectordrawable.graphics.drawable.ArgbEvaluator
 import com.example.examenitems.R
 import java.util.*
 
+@SuppressLint("RestrictedApi")
 class EditItemActivity : AppCompatActivity() {
 
-    private lateinit var addNoteBackground: RelativeLayout
-    private lateinit var addNoteWindowBg: LinearLayout
+    private lateinit var addItemBackground: RelativeLayout
+    private lateinit var addItemWindowBg: LinearLayout
 
+    @SuppressLint("MissingInflatedId")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_edit_items)
 
-        addNoteBackground = findViewById(R.id.add_note_background)
-        addNoteWindowBg = findViewById(R.id.add_note_window_bg)
+        addItemBackground = findViewById(R.id.add_item_background)
+        addItemWindowBg = findViewById(R.id.add_item_window_bg)
 
         setActivityStyle()
 
@@ -46,19 +48,15 @@ class EditItemActivity : AppCompatActivity() {
 
         val updateItemButton = findViewById<Button>(R.id.update_item_button)
         updateItemButton.setOnClickListener {
-            // Return the note back to the Not  esActivity
             val data = Intent()
             data.putExtra("item_name", addItemName.text.toString())
             data.putExtra("item_price", addItemPrice.text.toString())
             setResult(Activity.RESULT_OK, data)
-            // Close current window
             onBackPressed()
         }
     }
 
-    @SuppressLint("RestrictedApi")
     private fun setActivityStyle() {
-        // Make the background full screen, over status bar
         window.decorView.systemUiVisibility =
             View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
         this.window.statusBarColor = Color.TRANSPARENT
@@ -67,45 +65,38 @@ class EditItemActivity : AppCompatActivity() {
             winParams.flags and WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS.inv()
         this.window.attributes = winParams
 
-        // Fade animation for the background of Popup Window
-        val alpha = 100 //between 0-255
+        val alpha = 100
         val alphaColor = ColorUtils.setAlphaComponent(Color.parseColor("#000000"), alpha)
         val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), Color.TRANSPARENT, alphaColor)
-        colorAnimation.duration = 500 // milliseconds
+        colorAnimation.duration = 500
         colorAnimation.addUpdateListener { animator ->
-            addNoteBackground.setBackgroundColor(animator.animatedValue as Int)
+            addItemBackground.setBackgroundColor(animator.animatedValue as Int)
         }
         colorAnimation.start()
 
-        addNoteWindowBg.alpha = 0f
-        addNoteWindowBg.animate().alpha(1f).setDuration(500)
+        addItemWindowBg.alpha = 0f
+        addItemWindowBg.animate().alpha(1f).setDuration(500)
             .setInterpolator(DecelerateInterpolator()).start()
 
-        // Close window when you tap on the dim background
-        addNoteBackground.setOnClickListener { onBackPressed() }
-        addNoteWindowBg.setOnClickListener { /* Prevent activity from closing when you tap on the popup's window background */ }
+        addItemBackground.setOnClickListener { onBackPressed() }
+        addItemWindowBg.setOnClickListener { }
     }
 
-
-    @SuppressLint("RestrictedApi")
     override fun onBackPressed() {
-        // Fade animation for the background of Popup Window when you press the back button
-        val alpha = 100 // between 0-255
+        val alpha = 100
         val alphaColor = ColorUtils.setAlphaComponent(Color.parseColor("#000000"), alpha)
         val colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), alphaColor, Color.TRANSPARENT)
-        colorAnimation.duration = 500 // milliseconds
+        colorAnimation.duration = 500
         colorAnimation.addUpdateListener { animator ->
-            addNoteBackground.setBackgroundColor(
+            addItemBackground.setBackgroundColor(
                 animator.animatedValue as Int
             )
         }
 
-        // Fade animation for the Popup Window when you press the back button
-        addNoteWindowBg.animate().alpha(0f).setDuration(500).setInterpolator(
+        addItemWindowBg.animate().alpha(0f).setDuration(500).setInterpolator(
             DecelerateInterpolator()
         ).start()
 
-        // After animation finish, close the Activity
         colorAnimation.addListener(object : AnimatorListenerAdapter() {
             override fun onAnimationEnd(animation: Animator) {
                 finish()

@@ -18,7 +18,8 @@
             android:layout_marginEnd="32dp"
             android:gravity="center"
             android:text="INSERTAR ITEM"
-            android:textSize="20dp"
+            android:textSize="30sp"
+            android:typeface="serif"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintEnd_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

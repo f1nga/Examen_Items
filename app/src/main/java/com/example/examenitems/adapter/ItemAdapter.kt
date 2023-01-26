@@ -27,14 +27,14 @@ class ItemAdapter : ListAdapter<Item, ItemAdapter.ItemHolder>(DiffCallback()) {
         val v =
             LayoutInflater.from(parent.context).inflate(R.layout.card_list, parent, false)
 
-        val carHolder = ItemHolder(v)
+        val itemHolder = ItemHolder(v)
 
-        val noteDelete = carHolder.itemView.findViewById<CardView>(R.id.cardView)
-        noteDelete.setOnClickListener {
-            listener.onItemClick(carHolder.adapterPosition)
+        val itemClick = itemHolder.itemView.findViewById<CardView>(R.id.cardView)
+        itemClick.setOnClickListener {
+            listener.onItemClick(itemHolder.adapterPosition)
         }
 
-        return carHolder
+        return itemHolder
     }
 
     override fun onBindViewHolder(holder: ItemHolder, position: Int) {
@@ -44,9 +44,8 @@ class ItemAdapter : ListAdapter<Item, ItemAdapter.ItemHolder>(DiffCallback()) {
         val itemImg = holder.itemView.findViewById<ImageView>(R.id.idImagen)
 
         itemName.text = currentItem.nom
-        itemPrice.text = currentItem.preu.toString()
+        itemPrice.text = "${currentItem.preu.toString()}€"
         itemImg.setBackgroundResource(searchImage(currentItem.nom))
-
     }
 
     class DiffCallback : DiffUtil.ItemCallback<Item>() {
@@ -57,7 +56,13 @@ class ItemAdapter : ListAdapter<Item, ItemAdapter.ItemHolder>(DiffCallback()) {
             oldItem == newItem
     }
 
-    private fun searchImage(name: String) : Int{
-        return R.drawable.ic_launcher_background
+    fun searchImage(imgName: String): Int {
+        when(imgName) {
+            "Cadira" -> return R.drawable.cadira
+            "Taula" -> return R.drawable.taula
+            "Sofa" -> return R.drawable.sofa
+            "Paperera" -> return R.drawable.paperera
+        }
+        return R.drawable.baseline_disabled_by_default_24
     }
 }

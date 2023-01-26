@@ -2,7 +2,6 @@ package com.example.examenitems.repository
 
 import android.content.Context
 import androidx.lifecycle.LiveData
-import com.example.examenitems.database.ItemDAO
 import com.example.examenitems.database.ItemDatabase
 import com.example.examenitems.models.Item
 import kotlinx.coroutines.CoroutineScope
@@ -10,10 +9,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ItemRepository {
-
     companion object {
 
-        var itemDatabase: ItemDatabase? = null
+        private var itemDatabase: ItemDatabase? = null
 
         var items: LiveData<List<Item>>? = null
 

@@ -7,9 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.findNavController
 import com.example.examenitems.R
 import com.example.examenitems.databinding.FragmentAddBinding
-import com.example.examenitems.databinding.FragmentShowBinding
 import com.example.examenitems.models.Item
 import com.example.examenitems.viewmodel.ItemViewModel
 
@@ -18,11 +18,10 @@ class AddFragment : Fragment() {
     lateinit var binding: FragmentAddBinding
     private lateinit var viewModel: ItemViewModel
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
          binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_add, container, false
@@ -43,6 +42,7 @@ class AddFragment : Fragment() {
         val itemPrice = binding.inputPreuText.text.toString().toInt()
 
         viewModel.insertItem(requireContext(), Item(itemName, itemPrice))
-    }
 
+        view?.findNavController()?.navigate(R.id.action_addFragment_to_showFragment)
+    }
 }

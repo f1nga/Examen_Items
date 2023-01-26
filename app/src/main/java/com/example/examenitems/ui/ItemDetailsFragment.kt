@@ -8,8 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.activityViewModels
+import androidx.navigation.findNavController
 import com.example.examenitems.R
 import com.example.examenitems.databinding.FragmentItemDetailsBinding
 import com.example.examenitems.models.Item
@@ -22,7 +24,7 @@ class ItemDetailsFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
          binding = DataBindingUtil.inflate(
             inflater,
             R.layout.fragment_item_details, container, false
@@ -39,6 +41,9 @@ class ItemDetailsFragment : Fragment() {
             updateItemToDB()
         }
 
+        binding.btnBack.setOnClickListener()  {
+            view?.findNavController()?.navigate(R.id.action_itemDetailsFragment_to_showFragment)
+        }
 
         return binding.root
     }
@@ -48,31 +53,46 @@ class ItemDetailsFragment : Fragment() {
         val itemPrice = binding.txtPreu
 
         itemName.text = viewModel.getItem()?.nom
-        itemPrice.text = viewModel.getItem()?.preu.toString()
+        itemPrice.text = "${viewModel.getItem()?.preu.toString()}€"
     }
 
     private fun deleteItemToDB() {
-        val itemName = binding.txtNom.text.toString()
-        val itemPrice = binding.txtPreu.text.toString().toInt()
 
-        viewModel.deleteItem(requireContext(), Item(itemName, itemPrice))
+        val builder = AlertDialog.Builder(requireContext())
+        builder.setMessage("Estàs segur que vols eliminar l'item?")
+            .setCancelable(false)
+            .setPositiveButton("Sí") { _, _ ->
+
+                val itemName = binding.txtNom.text.toString()
+                val itemPrice = binding.txtPreu.text.split("€")[0].toInt()
+
+                viewModel.deleteItem(requireContext(), Item(itemName, itemPrice))
+
+                view?.findNavController()?.navigate(R.id.action_itemDetailsFragment_to_showFragment)
+            }
+            .setNegativeButton("No") { dialog, _ ->
+                dialog.dismiss()
+            }
+
+        val alert = builder.create()
+        alert.show()
     }
 
     private fun updateItemToDB() {
+        val preu = binding.txtPreu.text.split("€")[0]
+
         val intent = Intent(requireContext(), EditItemActivity::class.java)
         intent.putExtra("item_name", binding.txtNom.text.toString())
-        intent.putExtra("item_price", binding.txtPreu.text.toString())
+        intent.putExtra("item_price", preu)
         updateItem.launch(intent)
-
     }
 
-    val updateItem =
+    private val updateItem =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
-                // Get the edited note from the AddNoteActivity
                 val itemName = result.data?.getStringExtra("item_name")
                 val itemPrice = result.data?.getStringExtra("item_price")
-                // Update the note in the list
+
                 val newItem = Item(itemName!!, itemPrice!!.toInt())
 
                 val currentItem = Item(viewModel.getItem()?.nom!!, viewModel.getItem()?.preu!!)

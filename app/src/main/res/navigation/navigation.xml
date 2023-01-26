@@ -18,9 +18,17 @@
     <fragment
         android:id="@+id/addFragment"
         android:name="com.example.examenitems.ui.AddFragment"
-        android:label="AddFragment" />
+        android:label="AddFragment" >
+        <action
+            android:id="@+id/action_addFragment_to_showFragment"
+            app:destination="@id/showFragment" />
+    </fragment>
     <fragment
         android:id="@+id/itemDetailsFragment"
         android:name="com.example.examenitems.ui.ItemDetailsFragment"
-        android:label="ItemDetailsFragment" />
+        android:label="ItemDetailsFragment" >
+        <action
+            android:id="@+id/action_itemDetailsFragment_to_showFragment"
+            app:destination="@id/showFragment" />
+    </fragment>
 </navigation>
